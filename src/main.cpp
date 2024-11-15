@@ -1,28 +1,45 @@
 #include <Arduino.h>
+#include <MotorDriver.hpp>
+#include <SensorDriver.hpp>
 
-#define MOTOR1 12
-#define MOTOR2 11
-#define SPEED 10
+SensorDriver sensorDriver{6, 5};
+
+MotorDriver motor1{12, 11, 10};
+MotorDriver motor2{8, 7, 9};
 
 void setup()
 {
+    motor1.init();
+    motor2.init();
+    motor1.set_direction(MOTOR_DIRECTION::FORWARD);
+    motor2.set_direction(MOTOR_DIRECTION::FORWARD);
+
+    sensorDriver.init();
     Serial.begin(9600);
-    pinMode(MOTOR1, OUTPUT);
-    pinMode(MOTOR2, OUTPUT);
-    pinMode(SPEED, OUTPUT);
 }
 
 void loop()
 {
-    static int num = 10;
-    if (Serial.available())
-    {
-        num = Serial.read();
-        Serial.println(num);
-    }
+    auto [d1, d2] = sensorDriver.read();
 
-    digitalWrite(MOTOR1, LOW);
-    digitalWrite(MOTOR2, HIGH);
-    analogWrite(SPEED, num);
-    delay(1000);
+    if (!d1 && !d2)
+    {
+        motor1.run(255);
+        motor2.run(255);
+    }
+    else if (!d1 && d2)
+    {
+        motor1.run(255);
+        motor2.run(0);
+    }
+    else if (d1 && !d2)
+    {
+        motor1.run(0);
+        motor2.run(255);
+    }
+    else
+    {
+        motor1.run(0);
+        motor2.run(0);
+    }
 }
