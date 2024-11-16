@@ -24,22 +24,30 @@ void loop()
 
     if (!d1 && !d2)
     {
-        motor1.run(255);
-        motor2.run(255);
+        motor1.run(95);
+        motor2.run(95);
     }
     else if (!d1 && d2)
     {
-        motor1.run(255);
-        motor2.run(0);
+        motor2.set_direction(MOTOR_DIRECTION::BACKWARD);
+        motor2.run(80);
+        motor1.set_direction(MOTOR_DIRECTION::FORWARD);
+        motor1.run(80);
     }
     else if (d1 && !d2)
     {
-        motor1.run(0);
-        motor2.run(255);
+        motor2.set_direction(MOTOR_DIRECTION::FORWARD);
+        motor2.run(80);
+        motor1.set_direction(MOTOR_DIRECTION::BACKWARD);
+        motor1.run(80);
     }
     else
     {
-        motor1.run(0);
-        motor2.run(0);
+        motor1.set_direction(MOTOR_DIRECTION::FORWARD);
+        motor2.set_direction(MOTOR_DIRECTION::FORWARD);
+        motor1.run(95);
+        motor2.run(95);
     }
+    motor1.set_direction(MOTOR_DIRECTION::BACKWARD);
+    motor2.set_direction(MOTOR_DIRECTION::BACKWARD);
 }
